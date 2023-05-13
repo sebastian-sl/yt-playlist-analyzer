@@ -1,0 +1,2 @@
+class playlist:
+    pass
