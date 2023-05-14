@@ -1,8 +1,3 @@
-## yt-playlist-analyzer
-Youtube Playlist Analyzer
-
-<br>
-
 ## Idea
 While using Youtube playlists more frequently, i sometimes noticed missing Videos from my playlists because they got deleted or went private. Sadly you don't get noticed <u>which</u> video exactly got removed from the playlist, youtube only provides the following info:
 
