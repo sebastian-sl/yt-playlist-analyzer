@@ -1,14 +1,11 @@
 import sqlite3
 
 class DB:
-    pass
 
-    def check_exist(self):
-        pass
+    def __init__(self):
+        self.storage_location = r"./src/db/database.db"
 
     def connect(self):
-        pass
+        self.conn = sqlite3.connect(self.storage_location)
 
-    def disconnect(self):
-        pass
-    
+        return self.conn
