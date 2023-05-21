@@ -30,28 +30,42 @@ def authorize():
     return googleapiclient.discovery.build(api_service_name, api_version, credentials = credentials)
 
 
-def yt_test():
+def playlist_request():
     youtube = authorize()
 
     request = youtube.playlists().list(
-        part="snippet",
+        part="contentDetails, snippet",
         mine=True,
         prettyPrint=True,
-        maxResults = 50
+        maxResults = 2
     )
+
     response = request.execute()
 
-    titles = []
-    for item in response["items"]:
-        title = item["snippet"]["title"]
-        titles.append(title)
+    with open("./resp/playlist_response.json", "w") as f:
+        json.dump(response, f, indent = 4)
 
-    print(titles)
+    
+def playlist_items_request():
+    youtube = authorize()
 
+    request = youtube.playlistItems().list(
+        part = "contentDetails, snippet",
+        prettyPrint = True,
+        maxResults = 2,
+        playlistId = "PLhqCGkIlCJBrOfUVhwa3SZ6LDsjycW3ut"
+    )
 
+    response = request.execute()
+
+    with open("./resp/playlist_items_response.json", "w") as f:
+        json.dump(response, f, indent = 4)
+
+    
 def db_con_test():
     database = DB()
     database.connect()
 
 if __name__ == "__main__":
-    yt_test()
+    playlist_request()
+    playlist_items_request()
