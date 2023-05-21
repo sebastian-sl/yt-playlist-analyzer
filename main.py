@@ -8,9 +8,9 @@ from oauth2client import tools # Added
 from oauth2client.file import Storage # Added
 
 # Local imports
-from src.DB import DB
-from src.Playlist import Playlist
-from src.Video import Video
+from src.db import DB
+from src.playlist import Playlist
+from src.video import Video
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 client_secrets_file = "google_credentials.json"

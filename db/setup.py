@@ -1,6 +1,6 @@
 import sqlite3
 
-fp = r"./src/db/database.db"
+fp = r"./db/database.db"
 
 con = sqlite3.connect(fp)
 
@@ -30,6 +30,8 @@ con.execute(""" CREATE TABLE IF NOT EXISTS videos (
                 pl_position INTEGER NOT NULL,
 
                 video_pl_id VARCHAR(255) NOT NULL,
+
+                last_checked DATETIME,
 
 
                 FOREIGN KEY (pl_id) REFERENCES playlists(id)
