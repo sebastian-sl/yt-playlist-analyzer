@@ -1,28 +1,43 @@
+import datetime
+
 class Playlist:
-    # Initialize Playlist with given name
-    def __init__(self, name, privacy):
-        self.name = name
-        self.privacy = privacy
+    def __init__(self, pl_id, title, con):
+        self.pl_id = pl_id
+        self.title = title
+        self.last_checked = datetime.datetime.now().strftime("%B %d, %Y %I:%M%p")
+        self.con = con
 
+    def insert_new(self):
+        sql = """
+            INSERT OR IGNORE INTO playlists (pl_id, title)
+            VALUES (?, ?)
+        """
+        
+        data = (self.pl_id, self.title)
 
-    # updates current object attributes with new info (first seen, last seen)
-    def update(self):
-        pass
+        self.con.cursor().execute(sql, data)
+        self.con.commit()
 
-    # Collects all videos corresponding to the playlist from API or DB
-    def set_videos(self):
-        pass
+    def dump_date(self):
+        sql = """
+            UPDATE playlists SET
+            last_checked = CURRENT_TIMESTAMP
+            WHERE pl_id = ?
+        """
+        data = self.pl_id
+        self.con.cursor().execute(sql, (data,))
+        self.con.commit()
 
-    # returns all videos from the playlist
-    def get_videos(self):
-        pass
+    def update_stats(self):
+        counts = self.con.cursor.execute(f"SELECT SUM(active), SUM(missing) FROM videos WHERE pl_id = {self.id}")
 
-    # compares two playlists (from different sources)
-    # by length and/or name comparison
-    @classmethod
-    def compare(first_playlist, second_playlist):
-        pass
+        sql = (f""" 
+            UPDATE playlists SET
+            count_active = ?,
+            count_missing = ?
+            WHERE pl_id = ?
+        """)
 
-    # gives out all videos from the playlist that are missing
-    def report_missing(self):
-        pass
+        data = (counts[0], counts[1], self.pl_id)
+        self.con.cursor().execute(sql, data)
+        self.con.commit()

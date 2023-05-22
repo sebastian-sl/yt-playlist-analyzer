@@ -6,6 +6,6 @@ class DB:
         self.storage_location = r"./db/database.db"
 
     def connect(self):
-        self.conn = sqlite3.connect(self.storage_location)
+        self.con = sqlite3.connect(self.storage_location)
 
-        return self.conn
+        return self.con

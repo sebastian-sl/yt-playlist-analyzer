@@ -37,13 +37,15 @@ def playlist_request():
         part="contentDetails, snippet",
         mine=True,
         prettyPrint=True,
-        maxResults = 2
+        maxResults = 20
     )
 
     response = request.execute()
 
-    with open("./resp/playlist_response.json", "w") as f:
-        json.dump(response, f, indent = 4)
+    # with open("./resp/playlist_response.json", "w") as f:
+    #     json.dump(response, f, indent = 4)
+
+    return response
 
     
 def playlist_items_request():
@@ -51,21 +53,33 @@ def playlist_items_request():
 
     request = youtube.playlistItems().list(
         part = "contentDetails, snippet",
-        prettyPrint = True,
         maxResults = 2,
         playlistId = "PLhqCGkIlCJBrOfUVhwa3SZ6LDsjycW3ut"
     )
 
     response = request.execute()
 
-    with open("./resp/playlist_items_response.json", "w") as f:
-        json.dump(response, f, indent = 4)
+    # with open("./resp/playlist_items_response.json", "w") as f:
+    #     json.dump(response, f, indent = 4)
 
-    
-def db_con_test():
-    database = DB()
-    database.connect()
+    return response
+
+
+
+def main():
+    con = DB().connect()
+
+    playlists = playlist_request()
+
+    for pl in playlists["items"]:
+        obj = Playlist(
+            pl_id = pl["id"],
+            title = pl["snippet"]["title"],
+            con = con
+        )
+
+        obj.insert_new()
+        obj.dump_date()
 
 if __name__ == "__main__":
-    playlist_request()
-    playlist_items_request()
+    main()
