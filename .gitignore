@@ -1,4 +1,4 @@
 /credentials.json
 /google_credentials.json
 /resp
-/db
+/db/*.db
