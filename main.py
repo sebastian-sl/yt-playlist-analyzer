@@ -37,7 +37,7 @@ def playlist_request():
         part="contentDetails, snippet",
         mine=True,
         prettyPrint=True,
-        maxResults = 20
+        maxResults = 1
     )
 
     response = request.execute()
@@ -48,13 +48,13 @@ def playlist_request():
     return response
 
     
-def playlist_items_request():
+def playlist_items_request(playlistId):
     youtube = authorize()
 
     request = youtube.playlistItems().list(
         part = "contentDetails, snippet",
-        maxResults = 2,
-        playlistId = "PLhqCGkIlCJBrOfUVhwa3SZ6LDsjycW3ut"
+        maxResults = 3,
+        playlistId = playlistId
     )
 
     response = request.execute()
@@ -80,6 +80,24 @@ def main():
 
         obj.insert_new()
         obj.dump_date()
+
+        videos = playlist_items_request(obj.pl_id)
+
+        for video in videos["items"]:
+            vid = Video(
+                video_pl_id = video["id"],
+                idd = video["id"],
+                title = video["snippet"]["title"],
+                description = video["snippet"]["description"],
+                thumbnail = video["snippet"]["thumbnails"]["default"]["url"],
+                channel = video["snippet"]["videoOwnerChannelTitle"],
+                channel_id = video["snippet"]["videoOwnerChannelId"],
+                pl_id = obj.pl_id,
+                pl_position = video["snippet"]["position"],
+                con = con
+            )
+
+            vid.insert_new()
 
 if __name__ == "__main__":
     main()
