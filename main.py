@@ -1,6 +1,3 @@
-import os
-import json
-
 # Google & OAuth Imports
 import googleapiclient.discovery
 from oauth2client import client # Added
@@ -36,14 +33,10 @@ def playlist_request():
     request = youtube.playlists().list(
         part="contentDetails, snippet",
         mine=True,
-        prettyPrint=True,
-        maxResults = 1
+        maxResults = 50
     )
 
     response = request.execute()
-
-    # with open("./resp/playlist_response.json", "w") as f:
-    #     json.dump(response, f, indent = 4)
 
     return response
 
@@ -53,46 +46,44 @@ def playlist_items_request(playlistId):
 
     request = youtube.playlistItems().list(
         part = "contentDetails, snippet",
-        maxResults = 3,
+        maxResults = 50,
         playlistId = playlistId
     )
 
     response = request.execute()
 
-    # with open("./resp/playlist_items_response.json", "w") as f:
-    #     json.dump(response, f, indent = 4)
-
     return response
-
 
 
 def main():
     playlists = playlist_request()
 
-    for pl in playlists["items"]:
-        obj = Playlist(
-            pl_id = pl["id"],
-            title = pl["snippet"]["title"],
-        )
+    for playlist in playlists["items"]:
+        pl = Playlist(pl_id = playlist["id"], title = playlist["snippet"]["title"])
 
-        obj.insert()
+        # Inserts Playlist into the Database Table (or ignore if ID already exists)
+        pl.insert()
 
-        videos = playlist_items_request(obj.pl_id)
+        # Fetching all Videos from the API to playlist ID
+        fetch_api = playlist_items_request(pl.pl_id)
 
-        for video in videos["items"]:
-            vid = Video(
-                video_pl_id = video["id"],
-                idd = video["id"],
-                title = video["snippet"]["title"],
-                description = video["snippet"]["description"],
-                thumbnail = video["snippet"]["thumbnails"]["default"]["url"],
-                channel = video["snippet"]["videoOwnerChannelTitle"],
-                channel_id = video["snippet"]["videoOwnerChannelId"],
-                pl_id = obj.pl_id,
-                pl_position = video["snippet"]["position"]
-            )
+        # Setting all Videos in Database to Inactive/Missing (This removes needage to iterate over Database entries)
+        Video.set_all_missing()
+
+
+        for video in fetch_api["items"]:
+            # Check if each Video is in Database & if its an available Video (not private, deleted etc.)
+            match = Video.check_db(video["id"])
+            available = Video.check_availability(video["snippet"]["description"])
+
+            # If in DB and Available update the Database record to Active (we set all to inactive, see above)
+            if match and available:
+                Video.update_status(1, 0, video["id"])
             
-            vid.insert()
+            # If not in DB but available, create an Instance of Video (serializing) and insert to Database
+            elif not match and available:
+                vid = Video(video, 1, 0)
+                vid.insert()
 
 if __name__ == "__main__":
     main()

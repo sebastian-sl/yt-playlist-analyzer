@@ -20,3 +20,9 @@ The current plan is to use <u> windows task planner </u> to execute a check for 
 
 ## Lookout
 Further development would be to develop a chrome extension that performs this tasks when you visit one of your own playlists.
+
+
+## TO-DO:
+-[ ] implement business logic to count active/missing values in playlist
+-[ ] implement attribute check for certain columns (title)
+-[ ] implement an ignore column in the database (in case a Video is already replaced)
