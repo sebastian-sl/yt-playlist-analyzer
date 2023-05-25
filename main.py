@@ -8,9 +8,9 @@ from oauth2client import tools # Added
 from oauth2client.file import Storage # Added
 
 # Local imports
-from src.db import DB
 from src.playlist import Playlist
 from src.video import Video
+from src.db import DB
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 client_secrets_file = "google_credentials.json"
@@ -67,19 +67,15 @@ def playlist_items_request(playlistId):
 
 
 def main():
-    con = DB().connect()
-
     playlists = playlist_request()
 
     for pl in playlists["items"]:
         obj = Playlist(
             pl_id = pl["id"],
             title = pl["snippet"]["title"],
-            con = con
         )
 
-        obj.insert_new()
-        obj.dump_date()
+        obj.insert()
 
         videos = playlist_items_request(obj.pl_id)
 
@@ -93,11 +89,10 @@ def main():
                 channel = video["snippet"]["videoOwnerChannelTitle"],
                 channel_id = video["snippet"]["videoOwnerChannelId"],
                 pl_id = obj.pl_id,
-                pl_position = video["snippet"]["position"],
-                con = con
+                pl_position = video["snippet"]["position"]
             )
-
-            vid.insert_new()
+            
+            vid.insert()
 
 if __name__ == "__main__":
     main()
