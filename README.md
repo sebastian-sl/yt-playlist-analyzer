@@ -23,6 +23,6 @@ Further development would be to develop a chrome extension that performs this ta
 
 
 ## TO-DO:
--[ ] implement business logic to count active/missing values in playlist
--[ ] implement attribute check for certain columns (title)
--[ ] implement an ignore column in the database (in case a Video is already replaced)
+- [ ] implement business logic to count active/missing values in playlist
+- [ ] implement attribute check for certain columns (title, description etc)
+- [ ] implement an ignore column in the database (in case a Video is already replaced) and/or write delete method
