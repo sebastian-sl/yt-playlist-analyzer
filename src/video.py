@@ -6,9 +6,9 @@ class Video(DB):
 
     # Sets all Videos in Database as not active, this elimnates the need to iterate over all DB Rows
     @staticmethod
-    def set_all_missing():
-        sql = f"UPDATE {Video.tbl} SET active = 0, missing = 1"
-        DB.cursor.execute(sql)
+    def set_all_missing(pl_id):
+        sql = f"UPDATE {Video.tbl} SET active = 0, missing = 1 WHERE pl_id = ?"
+        DB.cursor.execute(sql, (pl_id,))
         DB.con.commit()
 
     # Check whether Video is stored in database

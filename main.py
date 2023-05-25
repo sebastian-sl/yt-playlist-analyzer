@@ -68,7 +68,7 @@ def main():
         fetch_api = playlist_items_request(pl.pl_id)
 
         # Setting all Videos in Database to Inactive/Missing (This removes needage to iterate over Database entries)
-        Video.set_all_missing()
+        Video.set_all_missing(pl.pl_id)
 
 
         for video in fetch_api["items"]:
