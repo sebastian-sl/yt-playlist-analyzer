@@ -9,23 +9,13 @@ The current plan is to use <u> windows task planner </u> to execute a check for 
 <br> 
 
 ## Workflow
-* enter YT Credentials somewhere (config, CLI)
-* start program 
-* Option 1: Check all Playlists
-* Option 2: Check certain Playlist (list all current PL with ID + Name to choose which)
-* compare each playlist from API to DB
-* Update corresponding video attributes & perform Database actions (insert/update)
-
-<br>
-
-## Lookout
-Further development would be to develop a chrome extension that performs this tasks when you visit one of your own playlists.
-
-
-## TO-DO:
-- [X] catch Videos from Youtube API
+- [X] implement Youtube authorization and connection
+- [X] retrieve response for Playlist and PlaylistItems from Youtube API
 - [X] check Video for availability and if its already stored in DB
-- [X] update or insert according to comparison above
+- [X] update status or insert API Videos to DB
 - [X] implement business logic to count active/missing values in playlist
 - [ ] implement attribute check for certain columns (title, description etc)
 - [ ] implement an ignore column in the database (in case a Video is already replaced) and/or write delete method
+- [ ] return all Missing Videos in CLI
+- [ ] implement some kind of frontend
+<br>
