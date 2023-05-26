@@ -85,5 +85,7 @@ def main():
                 vid = Video(video, 1, 0)
                 vid.insert()
 
+        pl.update_count()
+
 if __name__ == "__main__":
     main()

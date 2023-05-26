@@ -20,3 +20,19 @@ class Playlist(DB):
         rows = [dict(zip(cols, row)) for row in response]
 
         return rows
+    
+    # updates the count_active and count_missing in the playlist Table
+    def update_count(self):
+        sql = f"UPDATE {Playlist.tbl} SET count_active = 0, count_missing = 0 WHERE pl_id = ?"
+        DB.cursor.execute(sql, (self.pl_id,))
+        DB.con.commit()
+
+        sql = f"""
+            UPDATE {Playlist.tbl} SET
+            count_active = (SELECT SUM(active) FROM videos WHERE {Playlist.tbl}.pl_id = {Playlist.sub_tbl}.pl_id),
+            count_missing = (SELECT SUM(missing) FROM videos WHERE {Playlist.tbl}.pl_id = {Playlist.sub_tbl}.pl_id)
+            WHERE {Playlist.tbl}.pl_id = ?
+        """
+
+        DB.cursor.execute(sql, (self.pl_id,))
+        DB.con.commit()

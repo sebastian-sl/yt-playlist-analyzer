@@ -23,6 +23,9 @@ Further development would be to develop a chrome extension that performs this ta
 
 
 ## TO-DO:
-- [ ] implement business logic to count active/missing values in playlist
+- [ X ] catch Videos from Youtube API
+- [ X ] check Video for availability and if its already stored in DB
+- [ X ] update or insert according to comparison above
+- [ X ] implement business logic to count active/missing values in playlist
 - [ ] implement attribute check for certain columns (title, description etc)
 - [ ] implement an ignore column in the database (in case a Video is already replaced) and/or write delete method
