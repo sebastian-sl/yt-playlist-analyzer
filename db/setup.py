@@ -35,6 +35,8 @@ con.execute(""" CREATE TABLE IF NOT EXISTS videos (
                 active INTEGER,
                 missing INTEGER,
 
+                ignore BOOLEAN DEFAULT FALSE,
+
                 FOREIGN KEY (pl_id) REFERENCES playlists(id)
                 )
 """)
