@@ -39,8 +39,6 @@ class Video(DB):
         DB.cursor.execute(sql, data)
         DB.con.commit()
 
-    # TO-DO: implement attribute check for certain columns (title) + ignore column (if a video is replaced)
-
     # Init (Serializing)
     def __init__(self, d, active, missing):
         self.video_pl_id = d["id"]

@@ -1,5 +1,6 @@
 import datetime
 from .db import DB
+import json
 
 class Playlist(DB):
     tbl = "playlists"
@@ -36,3 +37,17 @@ class Playlist(DB):
 
         DB.cursor.execute(sql, (self.pl_id,))
         DB.con.commit()
+
+
+    def show_all_missing():
+        sql = """SELECT a.title, b.title, b.description, b.thumbnail
+                 FROM playlists AS a INNER JOIN videos AS b ON a.pl_id = b.pl_id
+                 WHERE b.missing = 1
+        """
+
+        response = DB.cursor.execute(sql).fetchall()
+
+        cols = [col[0] for col in DB.cursor.description]
+        rows = [dict(zip(cols, row)) for row in response]
+
+        return json.dumps(rows, indent = 4)

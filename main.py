@@ -87,5 +87,8 @@ def main():
 
         pl.update_count()
 
+    # Printing the missing Videos as json to CLI atm
+    print(Playlist.show_all_missing())
+
 if __name__ == "__main__":
     main()
