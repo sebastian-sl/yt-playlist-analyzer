@@ -56,38 +56,44 @@ def playlist_items_request(playlistId):
 
 
 def main():
+    # Get all Playlists
     playlists = playlist_request()
 
     for playlist in playlists["items"]:
+        # Initialize Playlist
         pl = Playlist(pl_id = playlist["id"], title = playlist["snippet"]["title"])
 
         # Inserts Playlist into the Database Table (or ignore if ID already exists)
         pl.insert()
 
-        # Fetching all Videos from the API to playlist ID
+        # Fetching all Videos from the API belonging to the Playlist ID
         fetch_api = playlist_items_request(pl.pl_id)
 
         # Setting all Videos in Database to Inactive/Missing (This removes needage to iterate over Database entries)
         Video.set_all_missing(pl.pl_id)
 
-
         for video in fetch_api["items"]:
-            # Check if each Video is in Database & if its an available Video (not private, deleted etc.)
-            match = Video.check_db(video["id"])
+            # Check if Video is available, otherwise the status (missing) we set above stays true
             available = Video.check_availability(video["snippet"]["description"])
 
-            # If in DB and Available update the Database record to Active (we set all to inactive, see above)
-            if match and available:
-                Video.update_status(1, 0, video["id"])
-            
-            # If not in DB but available, create an Instance of Video (serializing) and insert to Database
-            elif not match and available:
+            if available:
+                # Initialize/Serialize Video
                 vid = Video(video, 1, 0)
-                vid.insert()
+                
+                # Check if Video is in Database
+                match = vid.check_db()
 
+                if match:
+                    # Update Video Attributes in Database
+                    vid.update_video()
+                else:
+                    # Otherwise insert into DB
+                    vid.insert()
+
+        # Counts all missing/active Videos in the current playlist and writes values to the DB
         pl.update_count()
 
-    # Printing the missing Videos as json to CLI atm
+    # Printing the missing Videos as json to CLI
     print(Playlist.show_all_missing())
 
 if __name__ == "__main__":

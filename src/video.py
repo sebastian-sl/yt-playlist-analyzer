@@ -12,11 +12,10 @@ class Video(DB):
         DB.con.commit()
 
     # Check whether Video is stored in database
-    @staticmethod
-    def check_db(video_pl_id):
+    def check_db(self):
         sql = f"SELECT * FROM {Video.tbl} WHERE video_pl_id = ?"
 
-        data = (video_pl_id,)
+        data = (self.video_pl_id,)
         result = DB.cursor.execute(sql, data).fetchall()
 
         return True if len(result) > 0 else False
@@ -29,13 +28,23 @@ class Video(DB):
         return False if description in missing_conditions else True
     
     # Update the corresponding Database record for a given Video ID
-    @staticmethod
-    def update_status(active, missing, video_pl_id):
+    def update_video(self):
         now = datetime.datetime.now().strftime("%B %d, %Y %I:%M%p")
         
         sql = f"UPDATE {Video.tbl} SET active = ?, missing = ?, last_checked = ? WHERE video_pl_id = ?"
 
-        data = (active, missing, now, video_pl_id)
+        sql = f"""
+        UPDATE {Video.tbl} SET
+        title = ?,
+        description = ?,
+        thumbnail = ?,
+        pl_position = ?,
+        last_checked = ?,
+        active = ?,
+        missing = ?
+        """
+
+        data = (self.title, self.description, self.thumbnail, self.pl_position, now, self.active, self.missing) 
         DB.cursor.execute(sql, data)
         DB.con.commit()
 
@@ -44,8 +53,8 @@ class Video(DB):
         self.video_pl_id = d["id"]
         self.id = d["contentDetails"]["videoId"]
         self.title = d["snippet"]["title"]
-        self.description = d["snippet"]["description"][:30]
-        self.thumbnail = d["snippet"]["thumbnails"]["default"]["url"]
+        self.description = d["snippet"]["description"][:75]
+        self.thumbnail = d["snippet"]["thumbnails"]["high"]["url"]
         self.channel = d["snippet"]["videoOwnerChannelTitle"]
         self.channel_id = d["snippet"]["videoOwnerChannelId"]
         self.pl_id = d["snippet"]["playlistId"]
