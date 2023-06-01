@@ -14,7 +14,7 @@ The current plan is to use <u> windows task planner </u> to execute a check for 
 - [X] check Video for availability and if its already stored in DB
 - [X] update status or insert API Videos to DB
 - [X] implement business logic to count active/missing values in playlist
-- [ ] implement attribute check for certain columns (title, description etc)
+- [X] implement attribute check for certain columns (title, description etc)
 - [X] implement an ignore column in the database (in case a Video is already replaced) and/or write delete method
 - [X] return all Missing Videos in CLI
 - [ ] implement some kind of frontend
