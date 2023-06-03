@@ -8,6 +8,20 @@ The current plan is to use <u> windows task planner </u> to execute a check for 
 
 <br> 
 
+## Process
+
+* Create Database by running db/setup.py
+* get your credentials file from google API and save it as google_credentials.json in main folder
+* run main.py once in a while :)
+
+<br>
+
+## FAQ
+
+If the Token expires once in a while, just delete the redentials.json and rerun the script. The Script will store a new TOKEN and create it from the google_credentials.json.
+
+<br>
+
 ## Workflow
 - [X] implement Youtube authorization and connection
 - [X] retrieve response for Playlist and PlaylistItems from Youtube API
@@ -18,4 +32,3 @@ The current plan is to use <u> windows task planner </u> to execute a check for 
 - [X] implement an ignore column in the database (in case a Video is already replaced) and/or write delete method
 - [X] return all Missing Videos in CLI
 - [ ] implement some kind of frontend
-<br>
